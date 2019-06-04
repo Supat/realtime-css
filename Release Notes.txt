@@ -1,0 +1,40 @@
+Version 1.0
+- Initial release
+- Support EEG input from FieldTrip Buffer
+
+Version 1.1
+- Add re-reference and bandpass filter to EEG signal
+
+Version 1.2
+- Significantly improved plotting
+
+Version 1.3
+- Add LabStreamingLayer (LSL) EEG input support
+
+Version 1.4
+- Add bandpass filter setting
+
+Version 1.5
+- Add topographic map view
+- Add Actiview acquisition modal
+- Add channel label to LSL view
+- Add each individual acquisition mode setting window
+
+Version 1.5.1
+- Add Plot average EEG signal option
+
+Version 1.6
+- Add real-time trigger plot for Actiview acquisition mode
+
+Version 1.7
+- Add average EEG potential plot mode
+
+Version 1.7.1
+- Add exclusive average EEG potential mode zoomings
+
+Version 1.7.2
+- Improve average EEG potential mode zooming method
+
+Version 1.7.3
+- Add average EEG potential mode plot new length option
+- Correct running average calculation

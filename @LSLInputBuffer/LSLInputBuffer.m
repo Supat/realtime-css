@@ -1,0 +1,59 @@
+classdef LSLInputBuffer < RECInputBuffer
+    %LSLInputBuffer This class represent LSL Data Stream.
+    %
+    %   This class handle data reading from LSL Stream. Its properties are 
+    %   parameters related to LSL connection setting.
+    
+    properties
+        
+    end
+    
+    properties (SetAccess = protected, GetAccess = protected)
+        ReadBufferTimer
+        Lib
+        Inlet
+    end
+    
+    methods
+        % Constructor
+        function obj = LSLInputBuffer(signalType)
+            try
+                obj.Lib = lsl_loadlib();
+            catch
+                disp('Unable to load LSL library');
+            end
+            
+            if nargin == 1
+                obj = obj.OpenInletType(signalType);
+            end
+        end
+        
+        function obj = OpenInletType(obj, signalType)
+            disp('Resolving LSL stream...');
+            stream = {};
+            stream = lsl_resolve_byprop(obj.Lib, 'type', signalType);
+            disp('Opening LSL inlet...');
+            obj.Inlet = lsl_inlet(stream{1});
+        end
+        
+        function Fs = ResolveStreamFrequency(obj)
+            Fs = obj.Inlet.info.nominal_srate();
+        end
+        
+        function Ch = ResolveChannelCount(obj)
+            Ch = obj.Inlet.info.channel_count();
+        end
+        
+        function ChLb = ResolveChannelLabel(obj)
+            ChLb = cell(obj.Inlet.info.channel_count(), 1);
+            ch = obj.Inlet.info.desc().child('channels').child('channel');
+            for k = 1:obj.Inlet.info.channel_count()
+%                 fprintf(['  ' ch.child_value('label') '\n']);
+                ChLb(k) = {ch.child_value('label')};
+                ch = ch.next_sibling();
+            end
+        end
+    end
+    
+end
+
