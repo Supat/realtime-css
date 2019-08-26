@@ -18,13 +18,19 @@ classdef LSLInputBuffer < RECInputBuffer
         % Constructor
         function obj = LSLInputBuffer(signalType)
             try
+            	disp('Loading LSL library...');
                 obj.Lib = lsl_loadlib();
             catch
                 disp('Unable to load LSL library');
             end
             
             if nargin == 1
-                obj = obj.OpenInletType(signalType);
+            	try
+            		disp('Opening an inlet...');
+                	obj = obj.OpenInletType(signalType);
+                catch
+                	disp('Unable to open an inlet');
+                end
             end
         end
         
@@ -32,19 +38,22 @@ classdef LSLInputBuffer < RECInputBuffer
             disp('Resolving LSL stream...');
             stream = {};
             stream = lsl_resolve_byprop(obj.Lib, 'type', signalType);
-            disp('Opening LSL inlet...');
+            disp('Registering stream to the inlet...');
             obj.Inlet = lsl_inlet(stream{1});
         end
         
         function Fs = ResolveStreamFrequency(obj)
+        	disp('Resolving inlet sampling rate...');
             Fs = obj.Inlet.info.nominal_srate();
         end
         
         function Ch = ResolveChannelCount(obj)
+        	disp('Resolving inlet channel count...');
             Ch = obj.Inlet.info.channel_count();
         end
         
         function ChLb = ResolveChannelLabel(obj)
+        	disp('Resolving inlet channel label...');
             ChLb = cell(obj.Inlet.info.channel_count(), 1);
             ch = obj.Inlet.info.desc().child('channels').child('channel');
             for k = 1:obj.Inlet.info.channel_count()
