@@ -529,7 +529,7 @@ switch hObject.Value
         end
     case 2
         handles.bufferSettingPushbutton.Enable = 'off';
-        handles.inputBuffer = LSLInputBuffer('EEG');	% make the argument a setting
+        handles.inputBuffer = LSLInputBuffer();	% make the argument a setting
     case 3
         handles.inputBuffer = ActiviewInputBuffer('127.0.0.1', 8888, 4, true, false, false, false, false, 4096);
         if ~isempty(handles.ActiviewSettingHandles)

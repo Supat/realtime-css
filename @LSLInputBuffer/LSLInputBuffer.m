@@ -5,7 +5,9 @@ classdef LSLInputBuffer < RECInputBuffer
     %   parameters related to LSL connection setting.
     
     properties
-        
+		Frequency
+		ChannelLabel
+		ChannelCount
     end
     
     properties (SetAccess = protected, GetAccess = protected)
@@ -40,6 +42,9 @@ classdef LSLInputBuffer < RECInputBuffer
             stream = lsl_resolve_byprop(obj.Lib, 'type', signalType);
             disp('Registering stream to the inlet...');
             obj.Inlet = lsl_inlet(stream{1});
+            obj.Frequency = obj.ResolveStreamFrequency();
+            obj.ChannelCount = obj.ResolveChannelCount();
+            obj.ChannelLabel = obj.ResolveChannelLabel();
         end
         
         function Fs = ResolveStreamFrequency(obj)

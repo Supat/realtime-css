@@ -6,11 +6,17 @@ function obj = ReadBuffer(obj)
 disp('Reading data from LSL Buffer...')
 
 try
-    [bufferData, ~] = obj.Inlet.pull_chunk();
+    bufferData = obj.Inlet.pull_chunk();
     bufferFrequency = obj.ResolveStreamFrequency;
     bufferChannelCount = obj.ResolveChannelCount;
     bufferChannelLabel = obj.ResolveChannelLabel;
-    ReadBufferEventData = BufferData(bufferData, bufferFrequency, bufferChannelCount, bufferChannelLabel);
+    
+    if any(strcmp(bufferChannelLabel, 'Trig1'))
+    	[EEG, Trig, EEGLabel, TrigLabel] = obj.ExtractTriggerSignal(bufferData, obj.ChannelLabel);
+        ReadBufferEventData = MarkedEEGData(EEG, Trig, obj.Frequency, obj.ChannelCount, EEGLabel, TrigLabel);
+    else
+    	ReadBufferEventData = BufferData(bufferData, bufferFrequency, bufferChannelCount, bufferChannelLabel);
+    end
     notify(obj, 'InputBufferDataAvailable', ReadBufferEventData);
 catch
     notify(obj, 'InputBufferDataUnavailable');

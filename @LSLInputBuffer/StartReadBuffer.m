@@ -6,6 +6,7 @@ function obj = StartReadBuffer(obj)
 %   data.
 
 try
+	disp('Opening an inlet...');
     obj = obj.OpenInletType('EEG');
     
     notify(obj, 'StartReadingInputBuffer');
