@@ -96,7 +96,7 @@ classdef LSLInputBuffer < RECInputBuffer
             			obj.ChannelLabel = vertcat(strseq('A', 1:32));
             	end
             	
-            	switch obj,ChannelCount
+            	switch obj.ChannelCount
             		case {185, 153, 89, 57}
             			obj.ChannelLabel = vertcat(obj.ChannelLabel, strseq('EX', 1:8));
             			obj.ChannelLabel + vertcat(obj.ChannelLabel, strseq('Sensors', 1:7));
