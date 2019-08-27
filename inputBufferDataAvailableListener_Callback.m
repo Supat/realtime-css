@@ -34,6 +34,11 @@ if isa(event, 'MarkedEEGData')
     EEGBuffer.DataLabels = event.Header.EEGLabel;
     EEGBuffer.TriggerLabels = event.Header.TriggerLabel;
     handles.displayAveragePotentialCheckbox.Enable = 'on';
+    
+    triggerSignals = EEGBuffer.TriggerSignals;
+    [xCor, values] = handles.inputBuffer.TriggerDecoder.Decode(triggerSignals);
+    EEGBuffer = EEGBuffer.UpdateCurrentTriggerState(xCor, values);
+    EEGBuffer = EEGBuffer.PushEEGChannelsToPotentialCacheForTrigger(str2double(handles.TriggerValueEdit.String));
 else
     EEGBuffer = EEGBuffer.AppendDataWithFrequency(event.RawData, event.Header.Fs);
     EEGBuffer.DataLabels = event.Header.label;
@@ -94,10 +99,6 @@ if plotPotential == true
             handles.EEGPeriodPopupmenu.Value = 1;
         end
         handles.EEGPeriodPopupmenu.String = {'3', '1.5', '0.3'};
-        triggerSignals = EEGBuffer.TriggerSignals;
-        [xCor, values] = handles.inputBuffer.TriggerDecoder.Decode(triggerSignals);
-        EEGBuffer = EEGBuffer.UpdateCurrentTriggerState(xCor, values);
-        EEGBuffer = EEGBuffer.PushEEGChannelsToPotentialCacheForTrigger(handles.EEGChannelListbox.Value, str2double(handles.TriggerValueEdit.String));
         plottingLabels = {'Ptn.'};
         
         if plotFilteredSignal == true

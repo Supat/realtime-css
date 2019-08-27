@@ -133,38 +133,49 @@ classdef EEGSignalBuffer
             obj.TriggerValues = values;
         end
         
-        function obj = PushEEGChannelsToPotentialCacheForTrigger(obj, channelIndex, triggerValue)
+        function obj = PushEEGChannelsToPotentialCacheForTrigger(obj, triggerValue)
             disp(obj.TriggerCount);
+            
             detectionPeriod = [length(obj.Data) - (obj.Frequency * obj.PotentialCacheLength), length(obj.Data) - (obj.Frequency * (obj.PotentialCacheLength - 1))];
-            EEGData = obj.Data(channelIndex, :);
+            
+            EEGData = obj.Data;
+            
             if ~isempty(obj.TriggerPositions) && ~isempty(obj.TriggerValues)
                 for i=1:length(obj.TriggerPositions)
+                
                     if obj.TriggerPositions(i) >= detectionPeriod(1) && obj.TriggerPositions(i) < detectionPeriod(2)
+                    
                         if obj.TriggerValues(i) == triggerValue
+                        
                             obj.TriggerCount = obj.TriggerCount + 1;
+                            
                             EEGSegment = EEGData(:, obj.TriggerPositions(i) - (1 * obj.Frequency):obj.TriggerPositions(i) + ((obj.PotentialCacheLength - 1) * obj.Frequency) - 1);
+                            
                             if obj.TriggerCount == 1
                                 obj.PotentialCache = EEGSegment;
                             else
+                            	% Calculate running average
                                 obj.PotentialCache = obj.PotentialCache * (obj.TriggerCount / (obj.TriggerCount + 1)) + EEGSegment  / (obj.TriggerCount + 1);
                             end
                         end
+                        
                     end
+                    
                 end
             end
         end
         
-        function EEGSegment = AverageEEGPotentialSegment(obj)
-            EEGSegment = obj.PotentialCache;
+        function EEGSegment = AverageEEGPotentialSegment(obj, index)
+            EEGSegment = obj.PotentialCache(index, :);
         end
         
         function referencedEEGSegment = ReferencedAverageEEGPotentialSegment(obj)
             try
                 if isempty(obj.ReferenceChannels)
-                    referencedEEGSegment = obj.PotentialCache;
+                    referencedEEGSegment = obj.PotentialCache(index, :);
                 else
                     ref = obj.Data(obj.ReferenceChannels,:);
-                    referencedEEGSegment = obj.PotentialCache; - mean2(ref);
+                    referencedEEGSegment = obj.PotentialCache(index, :) - mean2(ref);
                 end
             catch
                 referencedEEGSegment = [];
@@ -173,7 +184,7 @@ classdef EEGSignalBuffer
         
         function filteredEEGSegment = FilteredAverageEEGPotentialSegment(obj)
             try
-                filteredEEGSegment = eegfiltfft(obj.PotentialCache, obj.Frequency, obj.LowPassband, obj.HighPassband);
+                filteredEEGSegment = eegfiltfft(obj.PotentialCache(index, :), obj.Frequency, obj.LowPassband, obj.HighPassband);
             catch
                 filteredEEGSegment = [];
             end
@@ -182,10 +193,10 @@ classdef EEGSignalBuffer
         function FilteredReferencedEEGSegment = FilteredReferencedAverageEEGPotentialSegment(obj)
             try
                 if isempty(obj.ReferenceChannels)
-                    FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache, obj.Frequency, obj.LowPassband, obj.HighPassband);
+                    FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache(index, :), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 else
                     ref = eegfiltfft(obj.Data(obj.ReferenceChannels,:), obj.Frequency, obj.LowPassband, obj.HighPassband);
-                    FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache - mean2(ref), obj.Frequency, obj.LowPassband, obj.HighPassband);
+                    FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache(index, :) - mean2(ref), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 end
             catch
                 FilteredReferencedEEGSegment = [];
