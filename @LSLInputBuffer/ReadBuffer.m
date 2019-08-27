@@ -18,9 +18,12 @@ catch
 end
 
 try    
-    bufferFrequency = obj.ResolveStreamFrequency;
-    bufferChannelCount = obj.ResolveChannelCount;
-    bufferChannelLabel = obj.ResolveChannelLabel;
+    obj,ResolveStreamFrequency;
+    bufferFrequency = obj.Frequency;
+    obj.ResolveChannelCount;
+    bufferChannelCount = obj.ChannelCount;
+    obj.ResolveChannelLabel;
+    bufferChannelLabel = obj.ChannelLabel;
     
     if any(strcmp(bufferChannelLabel, 'Trig1'))
     	[EEG, Trig, EEGLabel, TrigLabel] = obj.ExtractTriggerSignal(bufferData, obj.ChannelLabel);

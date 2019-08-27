@@ -42,24 +42,24 @@ classdef LSLInputBuffer < RECInputBuffer
             stream = lsl_resolve_byprop(obj.Lib, 'type', signalType);
             disp('Registering stream to the inlet...');
             obj.Inlet = lsl_inlet(stream{1});
-            obj.Frequency = obj.ResolveStreamFrequency();
-            obj.ChannelCount = obj.ResolveChannelCount();
-            obj.ChannelLabel = obj.ResolveChannelLabel();
+            obj.ResolveStreamFrequency();
+            obj.ResolveChannelCount();
+            obj.ResolveChannelLabel();
         end
         
-        function Fs = ResolveStreamFrequency(obj)
+        function obj = ResolveStreamFrequency(obj)
         	disp('Resolving inlet sampling rate...');
             Fs = obj.Inlet.info.nominal_srate();
             obj.Frequency = Fs;
         end
         
-        function Ch = ResolveChannelCount(obj)
+        function obj = ResolveChannelCount(obj)
         	disp('Resolving inlet channel count...');
             Ch = obj.Inlet.info.channel_count();
             obj.ChannelCount = Ch;
         end
         
-        function ChLb = ResolveChannelLabel(obj)
+        function obj = ResolveChannelLabel(obj)
         	disp('Resolving inlet channel label...');
         	try
             	ChLb = cell(obj.Inlet.info.channel_count(), 1);
