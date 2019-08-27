@@ -7,9 +7,10 @@ disp('Reading data from LSL Buffer...')
 
 try
     [bufferData, ~] = obj.Inlet.pull_chunk();
-    if isempty(bufferData)
+   if (isempty(bufferData))
     	ME = MException('LSLInputBuffer:dataIsEmpty', ...
     		'Try to pull_chunk from inlet, but return empty')
+    	throw(ME);
     end
 catch
 	bufferData = obj.Inlet.pull_chunk();
