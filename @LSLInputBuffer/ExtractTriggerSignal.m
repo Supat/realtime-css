@@ -2,9 +2,16 @@ function [EEGSignals, TriggerSignals, EEGLabels, TriggerLabels] = ExtractTrigger
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
-EEGSignals = rawSignals(1:end - 1, :);
-TriggerSignals = rawSignals(end, :);
-EEGLabels = labels(1:end - 1);
-TriggerLabels = labels(end);
+idx = find(strcmp('Trig1', labels));
+
+EEGSignals = rawSignals;
+EEGSignals(idx, :) = [];
+
+TriggerSignals = rawSignals(idx, :);
+
+EEGLabels = labels;
+EEGLabels(idx, :) = [];
+
+TriggerLabels = labels(idx);
 
 end

@@ -180,6 +180,6 @@ if isEstimating == true
 end
 
 %% Warped Phase Coherence
-handles.warpedPhaseDecoder.FeedEEG(EEGBuffer.Data(handles.EEGChannelListbox.Value,:));
+%handles.warpedPhaseDecoder.FeedEEG(EEGBuffer.Data(handles.EEGChannelListbox.Value,:));
 end
 
