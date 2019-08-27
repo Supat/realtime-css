@@ -1,4 +1,4 @@
-classdef LSLInputBuffer < RECInputBuffer
+classdef LSLInputBuffer < RECInputBuffer & RECTriggerBuffer
     %LSLInputBuffer This class represent LSL Data Stream.
     %
     %   This class handle data reading from LSL Stream. Its properties are 
@@ -8,6 +8,9 @@ classdef LSLInputBuffer < RECInputBuffer
 		Frequency
 		ChannelLabel
 		ChannelCount
+		
+		TriggerBitLength = 16
+		TriggerDecoder
     end
     
     properties (SetAccess = protected, GetAccess = protected)
@@ -34,6 +37,9 @@ classdef LSLInputBuffer < RECInputBuffer
                 	disp('Unable to open an inlet');
                 end
             end
+            
+            obj.TriggerDecoder = BioSemiTriggerDecoder();
+            obj.TriggerDecoder.TriggerOffset = obj.TriggerBitLength;
         end
         
         function obj = OpenInletType(obj, signalType)
@@ -123,6 +129,15 @@ classdef LSLInputBuffer < RECInputBuffer
             catch
             	
             end
+        end
+        
+        function obj = set.TriggerBitLength(obj, triggerBitLength)
+        	obj.TriggerBitLength = triggerBitLength;
+        	obj = obj.UpdateTriggerOffset();
+        end
+        
+        function obj = UpdateTriggerOffset(obj)
+        	obj.TriggerDecoder.TriggerOffset + obj.TriggerBitLength; 
         end
     end
     
