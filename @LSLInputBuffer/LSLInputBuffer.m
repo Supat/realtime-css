@@ -38,7 +38,7 @@ classdef LSLInputBuffer < RECInputBuffer & RECTriggerBuffer
                 end
             end
             
-            obj.TriggerDecoder = BioSemiTriggerDecoder();
+            obj.TriggerDecoder = LSLTriggerDecoder();
             obj.TriggerDecoder.TriggerOffset = obj.TriggerBitLength;
         end
         
