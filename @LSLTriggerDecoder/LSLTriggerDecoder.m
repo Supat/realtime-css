@@ -19,12 +19,10 @@ classdef BioSemiTriggerDecoder < RECTriggerDecoder
     
     properties (SetAccess = protected, GetAccess = protected)
         SignalBitLength = 32;
-        TriggerHeadLength = 8;
-        TriggerTailLength = 8;
     end
     
     properties (SetAccess = protected)
-        TriggerBitLength = 16;
+        TriggerBitLength = 3;
     end
     
     methods

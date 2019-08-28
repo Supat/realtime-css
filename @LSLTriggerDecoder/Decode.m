@@ -18,11 +18,7 @@ function [Timepoints, Markers] = Decode(obj, rawSignal)
 % Markers = rawSignal(Timepoints);
 
 %%
-Markers = bitxor(bitsrl(bitsll(typecast(int32(Markers), 'uint32'), obj.TriggerHeadLength), obj.TriggerHeadLength + obj.TriggerTailLength), pow2(2, obj.TriggerBitLength - 1) - pow2(2, obj.TriggerOffset - 1));
-for i=1:length(Markers)
-    bin = de2bi(Markers(i), obj.TriggerOffset, 'right-msb');
-    Markers(i) = bi2de(bin, 'left-msb');
-end
+Markers = transpose(bi2de(de2bi(bitsrl(bitsll(typecast(int32(Markers), 'uint32'), obj.SignalBitLength - obj.TriggerBitLength), obj.SignalBitLength - obj.TriggerBitLength), 'left-msb'), 'left-msb'));
 
 end
 
