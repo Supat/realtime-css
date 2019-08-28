@@ -20,6 +20,7 @@ isReadingInputBuffer = true;
 handles.eegReadButton.String = 'Stop Buffer';
 handles.bufferSettingPushbutton.Enable = 'off';
 handles.inputModePopupmenu.Enable = 'off';
+handles.TriggerValueEdit.Enable = 'off';
 EEGBuffer = EEGBuffer.ClearPotentialCache();
 end
 

@@ -93,6 +93,7 @@ classdef LSLInputBuffer < RECInputBuffer & RECTriggerBuffer
             	end
             catch
             	disp('Cannot properly resolve channel label from LSL inlet, assuming the label...')
+                disp('*Correct channel labels are not guaranteed*')
                 ChLb = {};
                 
                 switch obj.ChannelCount

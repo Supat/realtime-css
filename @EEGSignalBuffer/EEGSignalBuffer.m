@@ -169,7 +169,7 @@ classdef EEGSignalBuffer
             EEGSegment = obj.PotentialCache(index, :);
         end
         
-        function referencedEEGSegment = ReferencedAverageEEGPotentialSegment(obj)
+        function referencedEEGSegment = ReferencedAverageEEGPotentialSegment(obj, index)
             try
                 if isempty(obj.ReferenceChannels)
                     referencedEEGSegment = obj.PotentialCache(index, :);
@@ -182,7 +182,7 @@ classdef EEGSignalBuffer
             end
         end
         
-        function filteredEEGSegment = FilteredAverageEEGPotentialSegment(obj)
+        function filteredEEGSegment = FilteredAverageEEGPotentialSegment(obj, index)
             try
                 filteredEEGSegment = eegfiltfft(obj.PotentialCache(index, :), obj.Frequency, obj.LowPassband, obj.HighPassband);
             catch
@@ -190,7 +190,7 @@ classdef EEGSignalBuffer
             end
         end
         
-        function FilteredReferencedEEGSegment = FilteredReferencedAverageEEGPotentialSegment(obj)
+        function FilteredReferencedEEGSegment = FilteredReferencedAverageEEGPotentialSegment(obj, index)
             try
                 if isempty(obj.ReferenceChannels)
                     FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache(index, :), obj.Frequency, obj.LowPassband, obj.HighPassband);

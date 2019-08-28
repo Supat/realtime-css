@@ -60,6 +60,7 @@ handles.output = hObject;
 handles.TopoWindowHandles = [];
 handles.FieldTripSettingHandles = [];
 handles.ActiviewSettingHandles = [];
+handles.LSLSettingHandles = [];
 
 handles.inputBuffer = FieldTripBuffer('localhost', '1972');
 handles.startReadingInputBufferListener = addlistener(handles.inputBuffer, 'StartReadingInputBuffer', @(src, event)startReadingInputBufferListener_Callback(src, event, hObject, handles));
@@ -411,6 +412,9 @@ end
 if ~isempty(handles.ActiviewSettingHandles)
     delete(handles.ActiviewSettingHandles);
 end
+if ~isempty(handles.LSLSettingHandles)
+    delete(handles.LSLSettingHandles);
+end
 delete(hObject);
 
 
@@ -528,8 +532,12 @@ switch hObject.Value
             guidata(handles.FieldTripSettingHandles, FTBufferSetting_data);
         end
     case 2
-        handles.bufferSettingPushbutton.Enable = 'off';
+        %handles.bufferSettingPushbutton.Enable = 'off';
         handles.inputBuffer = LSLInputBuffer();	% make the argument a setting
+        if ~isempty(handles.LSLSettingHandles)
+            LSLSetting_data = guidata(handles.LSLSettingHandles);
+            guidata(handles.LSLSettingHandles, LSLSetting_data);
+        end
     case 3
         handles.inputBuffer = ActiviewInputBuffer('127.0.0.1', 8888, 4, true, false, false, false, false, 4096);
         if ~isempty(handles.ActiviewSettingHandles)
@@ -659,6 +667,13 @@ switch handles.inputModePopupmenu.Value
             FTBufferSetting_data = guidata(handles.FieldTripSettingHandles);
             FTBufferSetting_data.RECWindowHandle = hObject.Parent;
             guidata(handles.FieldTripSettingHandles, FTBufferSetting_data);
+        end
+    case 2
+        if isempty(handles.LSLSettingHandles)
+            handles.LSLSettingHandles = LSLSetting;
+            LSLSetting_data = guidata(handles.LSLSettingHandles);
+            LSLSetting_data.RECWindowHandle = hObject.Parent;
+            guidata(handles.LSLSettingHandles, LSLSetting_data);
         end
     case 3
         if isempty(handles.ActiviewSettingHandles)

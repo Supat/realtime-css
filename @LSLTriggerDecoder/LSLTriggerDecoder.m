@@ -1,4 +1,4 @@
-classdef BioSemiTriggerDecoder < RECTriggerDecoder
+classdef LSLTriggerDecoder < RECTriggerDecoder
     %BioSemiTriggerDecoder This class responsible for decode BioSemi
     %trigger signal.
     %
@@ -27,7 +27,7 @@ classdef BioSemiTriggerDecoder < RECTriggerDecoder
     
     methods
         % Constructor
-        function obj = BioSemiTriggerDecoder()
+        function obj = LSLTriggerDecoder()
         end
         
         function [XCoordinates, Values] = ExtractMarkers(obj, signal)

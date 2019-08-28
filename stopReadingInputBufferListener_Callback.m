@@ -23,9 +23,8 @@ plotPotential = false;
 handles.eegReadButton.String = 'Start Buffer';
 handles.inputModePopupmenu.Enable = 'on';
 handles.applyReferenceChannelButton.Enable = 'off';
-if handles.inputModePopupmenu.Value ~= 2
-    handles.bufferSettingPushbutton.Enable = 'on';
-end
+handles.bufferSettingPushbutton.Enable = 'on';
+handles.TriggerValueEdit.Enable = 'on';
 
 handles.displayTriggersCheckbox.Enable = 'off';
 handles.displayTriggersCheckbox.Value = 0;

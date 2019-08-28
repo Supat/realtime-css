@@ -99,16 +99,15 @@ if plotPotential == true
             handles.EEGPeriodPopupmenu.Value = 1;
         end
         handles.EEGPeriodPopupmenu.String = {'3', '1.5', '0.3'};
-        plottingLabels = {'Ptn.'};
         
         if plotFilteredSignal == true
-            plottingData = EEGBuffer.FilteredAverageEEGPotentialSegment;
+            plottingData = EEGBuffer.FilteredAverageEEGPotentialSegment(handles.EEGChannelListbox.Value);
         elseif plotReferencedSignal == true
-            plottingData = EEGBuffer.ReferencedAverageEEGPotentialSegment;
+            plottingData = EEGBuffer.ReferencedAverageEEGPotentialSegment(handles.EEGChannelListbox.Value);
         elseif plotReferencedSignal == true && plotFilteredSignal == true
-            plottingData = EEGBuffer.FilteredReferencedAverageEEGPotentialSegment;
+            plottingData = EEGBuffer.FilteredReferencedAverageEEGPotentialSegment(handles.EEGChannelListbox.Value);
         else
-            plottingData = EEGBuffer.AverageEEGPotentialSegment;
+            plottingData = EEGBuffer.AverageEEGPotentialSegment(handles.EEGChannelListbox.Value);
         end
         
         if strcmp(handles.EEGPeriodPopupmenu.String(handles.EEGPeriodPopupmenu.Value), '3')
@@ -131,12 +130,11 @@ if plotPotential == true
             plottingPeriod = str2double(handles.EEGPeriodPopupmenu.String(handles.EEGPeriodPopupmenu.Value));
             markerPosition = floor(EEGBuffer.Frequency * 0.1);
         end
-        if size(plottingData, 1) == 1
-            ymode = 2;
-        end
     catch
         disp('Plot potential error occurs')
         msgbox('Unable to plot EEG potential', 'Plot Error', 'error');
+        plotPotential = false;
+        handles.displayAveragePotentialCheckbox.Value = 0;
     end
 else
     handles.EEGPeriodPopupmenu.String = strread(num2str(fliplr(1:EEGBuffer.BufferLength)),'%s');
@@ -162,7 +160,9 @@ if plotTriggers == true
         if ~isempty(xCor) && ~isempty(values)
             plotTriggerToAxes(handles.EEGAxes, xCor, values);
         end
-    catch
+    catch e
+        disp(e.identifier);
+        disp(e.message);
         disp('Plot triggers error occurs')
         msgbox('Unable to plot triggers', 'Plot Error', 'error');
         plotTriggers = false;
