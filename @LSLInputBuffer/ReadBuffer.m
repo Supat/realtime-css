@@ -6,11 +6,9 @@ function obj = ReadBuffer(obj)
 disp('Reading data from LSL Buffer...')
 
 try
-    [bufferData, ~] = obj.Inlet.pull_chunk();
-   if (isempty(bufferData))
-    	ME = MException('LSLInputBuffer:dataIsEmpty', ...
-    		'Try to pull_chunk from inlet, but return empty')
-    	throw(ME);
+    bufferData = [];
+    while (isempty(bufferData))
+        [bufferData, ~] = obj.Inlet.pull_chunk();
     end
 catch
 	bufferData = obj.Inlet.pull_chunk();
@@ -18,7 +16,7 @@ catch
 end
 
 try    
-    obj,ResolveStreamFrequency;
+    obj.ResolveStreamFrequency;
     bufferFrequency = obj.Frequency;
     obj.ResolveChannelCount;
     bufferChannelCount = obj.ChannelCount;

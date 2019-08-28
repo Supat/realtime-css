@@ -69,66 +69,80 @@ classdef LSLInputBuffer < RECInputBuffer & RECTriggerBuffer
         	disp('Resolving inlet channel label...');
         	try
             	ChLb = cell(obj.Inlet.info.channel_count(), 1);
+                ME = MException('LSLInputBuffer:LSLLibError', ...
+            				'Attempting to read info cause LSL to crash');
+                throw(ME);
             	ch = obj.Inlet.info.desc().child('channels').child('channel');
             	for k = 1:obj.Inlet.info.channel_count()
 %                 fprintf(['  ' ch.child_value('label') '\n']);
                 	ChLb(k) = {ch.child_value('label')};
                 	ch = ch.next_sibling();
-            	end
-            	obj.ChannelLabel = ChLb;
+                end
+                obj.ChannelLabel = ChLb;
             catch
             	disp('Unable to resolve channel label from LSL inlet')
             end
             
             try
             	for i=1:length(ChLb)
-            		if (isempty(ChLb(i)))
+            		if (isempty(ChLb{i}))
             			ME = MException('LSLInputBuffer:ChannelLabelMissing', ...
             				'Empty label found while resolving channel label from LSL inlet');
+                        throw(ME);
             		end
             	end
             catch
             	disp('Cannot properly resolve channel label from LSL inlet, assuming the label...')
+                ChLb = {};
+                
+                switch obj.ChannelCount
+                    case {185, 153, 89, 57}
+                        ChLb = vertcat(ChLb, strseq('Trig', 1));
+                end
+                
             	switch obj.ChannelCount
             		case {185, 168}
-            			obj.ChannelLabel = vertcat(strseq('A', 1:32), strseq('B', 1:32), ...
+            			ChLb = vertcat(ChLb, strseq('A', 1:32), strseq('B', 1:32), ...
             				strseq('C', 1:32), strseq('D', 1:32), strseq('E', 1:32));
             		case {153, 136}
-            			obj.ChannelLabel = vertcat(strseq('A', 1:32), strseq('B', 1:32), ...
+            			ChLb = vertcat(ChLb, strseq('A', 1:32), strseq('B', 1:32), ...
             				strseq('C', 1:32), strseq('D', 1:32));
             		case {89, 72}
-            			obj.ChannelLabel = vertcat(strseq('A', 1:32), strseq('B', 1:32));
+            			ChLb = vertcat(ChLb, strseq('A', 1:32), strseq('B', 1:32));
             		case {57, 40}
-            			obj.ChannelLabel = vertcat(strseq('A', 1:32));
+            			ChLb = vertcat(ChLb, strseq('A', 1:32));
             	end
             	
             	switch obj.ChannelCount
             		case {185, 153, 89, 57}
-            			obj.ChannelLabel = vertcat(obj.ChannelLabel, strseq('EX', 1:8));
-            			obj.ChannelLabel + vertcat(obj.ChannelLabel, strseq('Sensors', 1:7));
-            			obj.ChannelLabel = vertcat(obj.ChannelLabel, strseq('Jazz', 1:9));
-            			obj.ChannelLabel = vertcat(obj.ChannelLabel, strseq('Trig', 1));
-            	end
+            			ChLb = vertcat(ChLb, strseq('EX', 1:8));
+            			ChLb = vertcat(ChLb, strseq('Sensors', 1:7));
+            			ChLb = vertcat(ChLb, strseq('Jazz', 1:9));
+                end
+                
+                obj.ChannelLabel = ChLb;
             end
             
             try
-            	if (obj.ChannelCount == length(obj.ChennelLabel))
+            	if (obj.ChannelCount ~= length(obj.ChannelLabel))
             		ME = MException('LSLInputBuffer:channelCountMismatch', ...
             			'Channel count and number of label does not agree');
+                    throw(ME);
             	end
             catch
             	disp('Channel count mismatch')
             end
             
             try
-            	if (isempty(find(strcmp('Trig1', ChLb))))
+            	if (isempty(find(strcmp('Trig1', obj.ChannelLabel))))
             		ME = MException('LSLInputBuffer:triggerChannelCannotBeIdentified', ...
             			'There is no trigger label presence in channel list');
             		throw(ME);	
             	end
             catch
-            	
+            	disp('Trigger channel cannot be identified');
             end
+      
         end
         
         function obj = set.TriggerBitLength(obj, triggerBitLength)
@@ -137,7 +151,7 @@ classdef LSLInputBuffer < RECInputBuffer & RECTriggerBuffer
         end
         
         function obj = UpdateTriggerOffset(obj)
-        	obj.TriggerDecoder.TriggerOffset + obj.TriggerBitLength; 
+        	obj.TriggerDecoder.TriggerOffset = obj.TriggerBitLength; 
         end
     end
     

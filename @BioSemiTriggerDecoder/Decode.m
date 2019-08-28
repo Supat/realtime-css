@@ -12,6 +12,12 @@ function [Timepoints, Markers] = Decode(obj, rawSignal)
 %   4. Apply XOR mask to mask out irrelavent bits.
 
 [Timepoints, Markers] = obj.ExtractMarkers(rawSignal);
+
+%% Simulated signal for debugging
+% Timepoints = ceil(length(rawSignal)/3);
+% Markers = rawSignal(Timepoints);
+
+%%
 Markers = bitxor(bitsrl(bitsll(typecast(int32(Markers), 'uint32'), obj.TriggerHeadLength), obj.TriggerHeadLength + obj.TriggerTailLength), pow2(2, obj.TriggerBitLength - 1) - pow2(2, obj.TriggerOffset - 1));
 for i=1:length(Markers)
     bin = de2bi(Markers(i), obj.TriggerOffset, 'right-msb');
