@@ -1,4 +1,4 @@
-Koike Lab Realtime EEG to Cortical Current Source Estimation Program
+Koike Lab Realtime EEG to Cortical Current Source Estimation Program (with Several Realtime EEG Visualization Utilities)
 
  Overview
 ===========================
@@ -6,6 +6,8 @@ This program can estimate and visualize cortical current source from EEG
 signal in realtime. The current source is estimated by applying inverse
 filter generated from VBMEG (or any filter with compatible format) to 
 incoming EEG signal.
+
+This program also capable of displaying realtime somatosensory evoked potential (SEP) from EEG signal.
 
  System Requirements
 ===========================
