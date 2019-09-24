@@ -6,6 +6,8 @@ classdef FieldTripBuffer < RECInputBuffer
     %   connection setting.
     
     properties
+        Name = 'FieldTrip'
+        
         Address
         Port
         PreviousSamples

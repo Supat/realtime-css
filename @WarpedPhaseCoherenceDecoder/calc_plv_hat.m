@@ -1,4 +1,4 @@
-function r=calc_plv_hat(s,alpha,flag1,flag2,flag3)
+function r=calc_plv_hat(obj, s,alpha,flag1,flag2,flag3)
     n=size(s,2);
     r=eye(n);
     r_hat=eye(n);

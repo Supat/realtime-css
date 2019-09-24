@@ -5,6 +5,8 @@ classdef LSLInputBuffer < RECInputBuffer & RECTriggerBuffer
     %   parameters related to LSL connection setting.
     
     properties
+        Name = 'Lab Streaming Layer';
+        
 		Frequency
 		ChannelLabel
 		ChannelCount

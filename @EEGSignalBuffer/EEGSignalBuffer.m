@@ -64,21 +64,47 @@ classdef EEGSignalBuffer
             obj.LowPassband = band;
         end
         
-        function data = DataForFilterInput(obj, numberOfChannel)
+        function data = DataForFilterInput(obj, index)
             try
                 if isempty(obj.ReferenceChannels)
-                    data = eegfiltfft(obj.Data(1:numberOfChannel,:), obj.Frequency, obj.LowPassband, obj.HighPassband);
+                    data = eegfiltfft(obj.Data(index,:), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 else
-                    ref_channel = eegfiltfft(obj.Data(obj.ReferenceChannels,:), obj.Frequency, obj.LowPassband, obj.HighPassband);
-                    data = eegfiltfft(obj.Data(1:numberOfChannel,:) - mean2(ref_channel), obj.Frequency, obj.LowPassband, obj.HighPassband);
+                    reref_data = obj.Data - mean(obj.Data(obj.ReferenceChannels,:));
+                    data = eegfiltfft(reref_data, obj.Frequency, obj.LowPassband, obj.HighPassband);
                 end
             catch
                 data = [];
             end
         end
         
+        function data = ReferencedData(obj, index)
+            if nargin == 1
+                try
+                    if isempty(obj.ReferenceChannels)
+                        data = obj.Data;
+                    else
+                        ref_channel = obj.Data(obj.ReferenceChannels,:);
+                        data = obj.Data - mean(ref_channel);
+                    end
+                catch
+                    data = [];
+                end
+            else
+                try
+                    if isempty(obj.ReferenceChannels)
+                        data = obj.Data(index,:);
+                    else
+                        ref_channel = obj.Data(obj.ReferenceChannels,:);
+                        data = obj.Data(index,:) - mean(ref_channel);
+                    end
+                catch
+                    data = [];
+                end
+            end
+        end
+        
         function data = FilteredData(obj, index)
-            if nargin ==0
+            if nargin == 1
                 try
                     data = eegfiltfft(obj.Data, obj.Frequency, obj.LowPassband, obj.HighPassband);
                 catch
@@ -89,7 +115,7 @@ classdef EEGSignalBuffer
                 try
                     data = eegfiltfft(obj.Data(index, :), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 catch
-                    disp('Cannot get filtered eeg data');
+                    disp('Cannot get filtered eeg data at index');
                     data = [];
                 end
             end
@@ -175,7 +201,7 @@ classdef EEGSignalBuffer
                     referencedEEGSegment = obj.PotentialCache(index, :);
                 else
                     ref = obj.Data(obj.ReferenceChannels,:);
-                    referencedEEGSegment = obj.PotentialCache(index, :) - mean2(ref);
+                    referencedEEGSegment = obj.PotentialCache(index, :) - mean(ref);
                 end
             catch
                 referencedEEGSegment = [];
@@ -195,8 +221,8 @@ classdef EEGSignalBuffer
                 if isempty(obj.ReferenceChannels)
                     FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache(index, :), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 else
-                    ref = eegfiltfft(obj.Data(obj.ReferenceChannels,:), obj.Frequency, obj.LowPassband, obj.HighPassband);
-                    FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache(index, :) - mean2(ref), obj.Frequency, obj.LowPassband, obj.HighPassband);
+                    ref = obj.Data(obj.ReferenceChannels,:);
+                    FilteredReferencedEEGSegment = eegfiltfft(obj.PotentialCache(index, :) - mean(ref), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 end
             catch
                 FilteredReferencedEEGSegment = [];

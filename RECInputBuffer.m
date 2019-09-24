@@ -24,6 +24,10 @@ classdef RECInputBuffer < handle
     %   disconnect the external sensor. If it is successful, it must notify
     %   'StopReadingInputBuffer' event.
    
+    properties (Abstract)
+        Name
+    end
+    
     methods (Abstract)
        StartReadBuffer(obj)
        ReadBuffer(obj)
