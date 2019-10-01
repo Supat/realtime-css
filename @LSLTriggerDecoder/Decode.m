@@ -18,7 +18,8 @@ function [Timepoints, Markers] = Decode(obj, rawSignal)
 % Markers = rawSignal(Timepoints);
 
 %%
-Markers = transpose(bi2de(de2bi(bitsrl(bitsll(typecast(int32(Markers), 'uint32'), obj.SignalBitLength - obj.TriggerOffset), obj.SignalBitLength - obj.TriggerOffset), 'left-msb'), 'left-msb'));
-
+if ~isempty(Markers)
+	Markers = transpose(bi2de(de2bi(bitsrl(bitsll(typecast(int32(Markers), 'uint32'), obj.SignalBitLength - obj.TriggerOffset), obj.SignalBitLength - obj.TriggerOffset), 'left-msb'), 'left-msb'));
+end
 end
 
