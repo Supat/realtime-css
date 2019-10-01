@@ -55,6 +55,15 @@ function REC_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for REC
 
 % Initailize parameter
+
+% add paths to subviews
+addpath(strcat(pwd, '/VisualizationSubViews'));
+addpath(strcat(pwd, '/SettingSubViews'));
+addpath(strcat(pwd, '/HelperFunctions'));
+addpath(strcat(pwd, '/CallbackFunctions'));
+addpath(strcat(pwd, '/PlotFunctions'));
+addpath(strcat(pwd, '/Classes'));
+
 handles.output = hObject;
 
 handles.TopoWindowHandles = [];
@@ -72,12 +81,8 @@ handles.profileAddedListener = addlistener(handles.CCSEstimator, 'NewProfileAdde
 handles.currentProfileSetListener = addlistener(handles.CCSEstimator, 'CurrentProfileSet', @(src, event)currentProfileSetListener_Callback(src, event, hObject, handles));
 handles.warpedPhaseDecoder = WarpedPhaseCoherenceDecoder();
 %% Temp
-handles.phaseLockingValueAvailableListener = addlistener(handles.warpedPhaseDecoder, 'PhaseLockingValueAvailable', @(src, event)phaseLockingValueAvailableListener_Callback(src, event, hObject, handles));
-%%
-% add paths to subviews
-addpath(strcat(pwd, '/VisualizationSubViews'));
-addpath(strcat(pwd, '/SettingSubViews'));
-addpath(strcat(pwd, '/HelperFunctions'));
+%handles.phaseLockingValueAvailableListener = addlistener(handles.warpedPhaseDecoder, 'PhaseLockingValueAvailable', @(src, event)phaseLockingValueAvailableListener_Callback(src, event, hObject, handles));
+
 
 % Update handles structure
 guidata(hObject, handles);
