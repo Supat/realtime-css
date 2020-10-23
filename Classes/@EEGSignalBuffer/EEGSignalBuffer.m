@@ -69,7 +69,7 @@ classdef EEGSignalBuffer
                 if isempty(obj.ReferenceChannels)
                     data = eegfiltfft(obj.Data(index,:), obj.Frequency, obj.LowPassband, obj.HighPassband);
                 else
-                    reref_data = obj.Data - mean(obj.Data(obj.ReferenceChannels,:));
+                    reref_data = obj.Data(index,:) - mean(obj.Data(obj.ReferenceChannels,:));
                     data = eegfiltfft(reref_data, obj.Frequency, obj.LowPassband, obj.HighPassband);
                 end
             catch
